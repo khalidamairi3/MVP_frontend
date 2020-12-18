@@ -3,8 +3,11 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
+import VModal from 'vue-js-modal/dist/index.nocss.js'
+import 'vue-js-modal/dist/styles.css'
 
 Vue.config.productionTip = false;
+Vue.use(VModal)
 
 new Vue({
   router,

@@ -2,6 +2,8 @@
   <v-app>
     
     <v-main>
+
+      <navBar />
       <router-view/>
 
     </v-main>
@@ -10,11 +12,14 @@
 
 <script>
 
+import navBar from "./components/navbar"
 
 export default {
   name: "App",
 
   components: {
+    navBar
+    
  
   },
 

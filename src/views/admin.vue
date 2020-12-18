@@ -93,5 +93,6 @@
     grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
     align-items: center;
     justify-items: center;
+    row-gap: 5vh;
 }
 </style>

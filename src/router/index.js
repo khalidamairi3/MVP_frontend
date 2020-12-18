@@ -4,7 +4,7 @@ import VueRouter from "vue-router";
 import landingPage from "../views/landing.vue"
 import adminPage from "../views/admin.vue"
 import coursesPage from "../views/courses.vue"
-
+import studentsPage from "../views/students.vue"
 Vue.use(VueRouter);
 
 const routes = [
@@ -12,6 +12,11 @@ const routes = [
     path: "/",
     name: "landing",
     component: landingPage
+  },
+  {
+    path: "/students",
+    name: "students",
+    component: studentsPage
   },
   {
     path: "/courses",

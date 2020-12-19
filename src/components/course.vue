@@ -18,12 +18,13 @@
         {{'Credits :' + course.credits}}
     </v-card-text>
     <v-card-actions>
-      <v-btn
+      <v-btn @click="viewCourse"
         color="blue lighten-1"
         text
       >
         View
       </v-btn>
+      
     </v-card-actions>
 
   </v-card>
@@ -40,6 +41,13 @@
                 type: Object,
                 required : true,
             },
+        },
+        methods: {
+            viewCourse() {
+                this.$store.commit("setCourse",this.course);
+                this.$router.push("/course");
+                
+            }
         },
         
     }

@@ -1,5 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import axios from "axios";
+import cookies from "vue-cookies"
 
 Vue.use(Vuex);
 
@@ -7,7 +9,7 @@ export default new Vuex.Store({
   state: {
     user :{},
     instructors:[],
-    studetns : [],
+    students : [],
     courses :[],
     selectedCourse:{}
   },
@@ -21,16 +23,52 @@ export default new Vuex.Store({
     updateInstructors: function (state, data) {
       state.instructors = data;
     },
-    updateStudetns: function (state, data) {
-      state.studetns = data;
+    updateStudents: function (state, data) {
+      state.students = data;
     },
     updateCourses: function (state, data) {
       state.courses = data;
     },
-
-
     
   },
-  actions: {},
+  actions: {
+    getCourses() {
+      axios
+        .request({
+          url: "http://127.0.0.1:5000/api/courses",
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            loginToken: cookies.get("token"),
+          },
+        })
+        .then((response) => {
+          this.commit("updateCourses",response.data);
+        })
+        .catch(() => {
+          alert("Something went wrong")
+        });
+    },
+
+    getStudents() {
+      axios
+        .request({
+          url: "http://127.0.0.1:5000/api/students",
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            loginToken: cookies.get("token"),
+          },
+        })
+        .then((response) => {
+          this.commit("updateStudents",response.data);
+        })
+        .catch(() => {
+
+        });
+    }
+
+
+  },
   modules: {}
 });

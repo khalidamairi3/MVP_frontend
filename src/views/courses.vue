@@ -49,17 +49,20 @@
 import axios from "axios";
 import cookies from "vue-cookies";
 import courseCard from "../components/course";
+const wait = ms => new Promise(res => setTimeout(res, ms));
 export default {
   name: "courses-view",
   components: {
     courseCard,
   },
-  mounted() {
-    this.getCourses();
+   async mounted () {
+      if (this.courses == undefined || this.courses.length ==0 ){
+          this.$store.dispatch("getCourses");
+          await wait(200)
+      }
   },
   data() {
     return {
-      courses: [],
       err: false,
       disabled: false,
       name: "",
@@ -68,24 +71,13 @@ export default {
       courseErr: false,
     };
   },
+  computed: {
+      courses() {
+          return this.$store.state.courses; 
+      }
+  },
   methods: {
-    getCourses() {
-      axios
-        .request({
-          url: "http://127.0.0.1:5000/api/courses",
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            loginToken: cookies.get("token"),
-          },
-        })
-        .then((response) => {
-          this.courses = response.data;
-        })
-        .catch(() => {
-          this.err = true;
-        });
-    },
+   
     newCourse() {
       this.$modal.show("newCourse");
     },

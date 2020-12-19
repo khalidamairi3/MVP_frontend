@@ -74,11 +74,14 @@ export default {
           }).then((response)=>{
               cookies.set("token",response.data.loginToken)
               this.$store.commit("setUser", response.data);
+              this.$store.dispatch("getCourses");
               this.disabled=false;
               if(response.data.role=="admin"){
+                this.$store.dispatch("getStudents");
                 this.$router.push("/admin");
               }
               else if(response.data.role=="instructor"){
+                this.$store.dispatch("getStudents");
                 this.$router.push("/instructor");
               }
               else{

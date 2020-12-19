@@ -4,7 +4,9 @@ import VueRouter from "vue-router";
 import landingPage from "../views/landing.vue"
 import adminPage from "../views/admin.vue"
 import coursesPage from "../views/courses.vue"
+import coursePage from "../views/course.vue"
 import studentsPage from "../views/students.vue"
+import instructorsPage from "../views/instructors.vue"
 Vue.use(VueRouter);
 
 const routes = [
@@ -19,9 +21,19 @@ const routes = [
     component: studentsPage
   },
   {
+    path: "/instructors",
+    name: "instructors",
+    component: instructorsPage
+  },
+  {
     path: "/courses",
     name: "courses",
     component: coursesPage
+  },
+  {
+    path: "/course",
+    name: "course-view",
+    component: coursePage
   },
   {
     path: "/admin",

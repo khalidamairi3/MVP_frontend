@@ -1,10 +1,13 @@
 <template>
-  <div id="students">
-    <v-btn @click="newSteudent" outlined big> New Student </v-btn>
+  <div id="instructors">
+    <v-alert class="alert" v-if="err" dense type="error">
+      Something went wrong
+    </v-alert>
+    <v-btn @click="newSteudent" outlined big> New instructor </v-btn>
     <v-data-table 
       v-model="selected"
       :headers="headers"
-      :items="students"
+      :items="instructors"
       :single-select="singleSelect"
       item-key="name"
       show-select
@@ -31,7 +34,7 @@
      <v-snackbar
         v-model="multipleSelect"
       >
-        You can edit one student at a time only
+        You can edit one instructor at a time only
   
         <template v-slot:action="{ attrs }">
           <v-btn
@@ -45,11 +48,11 @@
         </template>
       </v-snackbar>
 
-    <modal height="auto"  :scrollable= true  name="Student">
-      <v-form class="student-form" ref="form" lazy-validation>
+    <modal height="auto"  :scrollable= true  name="instructor">
+      <v-form class="instructor-form" ref="form" lazy-validation>
         <v-text-field
           v-model="name"
-          label="Student Name"
+          label="instructor Name"
           required
         ></v-text-field>
 
@@ -84,9 +87,9 @@
           color="primary"
           class="mr-4"
           style="justify-self:center"
-          @click="addStudent"
+          @click="addinstructor"
         >
-          Add Student
+          Add instructor
         </v-btn>
 
         <v-btn v-if="update"
@@ -94,12 +97,12 @@
           color="primary"
           class="mr-4"
           style="justify-self:center"
-          @click="updateStudent"
+          @click="updateinstructor"
         >
-          Update Student
+          Update instructor
         </v-btn>
 
-        <v-alert v-if="studentErr" dense type="error">
+        <v-alert v-if="instructorErr" dense type="error">
           Something went wrong
         </v-alert>
       </v-form>
@@ -108,7 +111,7 @@
      <v-snackbar
         v-model="deleterr"
       >
-        Select one student at least
+        Select one instructor at least
   
         <template v-slot:action="{ attrs }">
           <v-btn
@@ -122,12 +125,12 @@
         </template>
       </v-snackbar>
 
-    <modal  name="deleteStudents" > 
+    <modal  name="deleteinstructors" > 
         <div id="deleteModal">
 
-            <p> Are you sure you want to delete {{ selected.length }} Students </p> 
+            <p> Are you sure you want to delete {{ selected.length }} instructors </p> 
 
-        <v-btn :disabled ="deletedisable" @click="deleteStudents"
+        <v-btn :disabled ="deletedisable" @click="deleteinstructors"
     color = "error" 
     > delete</v-btn>
 
@@ -153,26 +156,24 @@
 <script>
 import axios from "axios";
 import cookies from "vue-cookies";
-const wait = ms => new Promise(res => setTimeout(res, ms));
 export default {
-  name: "students-view",
-  async mounted () {
-      if (this.students == undefined || this.students.length ==0 ){
-          this.$store.dispatch("getStudents");
-          await wait(200)
-      }
+  name: "instructors-view",
+  mounted() {
+    this.getinstructors();
   },
   data() {
     return {
+      instructors: [],
       selected:[],
       singleSelect:false,
+      err: false,
       name:"",
       username:"",
       email:"",
       password:"",
       birthdate:"",
       disabled:false,
-      studentErr:false,
+      instructorErr:false,
       updatedisabled:false,
       deletedisable:false,
       update:false,
@@ -181,7 +182,7 @@ export default {
       deleteErr:false,
       headers: [
         {
-          text: "Students",
+          text: "instructors",
           align: "start",
           sortable: false,
           value: "name",
@@ -194,14 +195,26 @@ export default {
       ],
     };
   },
-  computed: {
-      students() {
-          return this.$store.state.students; 
-      }
-  },
 
   methods: {      
- 
+    getinstructors() {
+      axios
+        .request({
+          url: "http://127.0.0.1:5000/api/instructors",
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            loginToken: cookies.get("token"),
+          },
+        })
+        .then((response) => {
+          this.instructors = response.data;
+          this.err = false;
+        })
+        .catch(() => {
+          this.err = true;
+        });
+    },
     newSteudent(){
         this.name="";
         this.username="";
@@ -209,14 +222,14 @@ export default {
         this.password="";
         this.birthdate="";
         this.update = false;
-        this.$modal.show("Student");        
+        this.$modal.show("instructor");        
 
     },
     updateModal(){
         if(this.singleSelect && this.selected.length ==1){
             this.multipleSelect=false
             this.update = true;
-            this.$modal.show("Student");
+            this.$modal.show("instructor");
             
 
         }
@@ -228,7 +241,7 @@ export default {
     },
      deleteModal(){
         if (this.selected.length>0){
-            this.$modal.show("deleteStudents");
+            this.$modal.show("deleteinstructors");
 
             
              
@@ -237,9 +250,9 @@ export default {
             this.deleterr=true;
         }
     },
-    addStudent(){
+    addinstructor(){
         this.disabled = true;
-        this.studentErr=false;
+        this.instructorErr=false;
         axios.request({
             url:"http://127.0.0.1:5000/api/users",
             method:"POST",
@@ -250,29 +263,29 @@ export default {
                password:this.password,
                username:this.username,
                email:this.email,
-               role : "student" 
+               role : "instructor" 
             },
             headers:{
                 "Content-Type":"application/json"
             }
         }).then((response)=>{
             this.disabled = false;
-            this.students.push(response.data);
+            this.instructors.push(response.data);
             this.name="";
             this.username="";
             this.email="";
             this.password="";
             this.birthdate="";
-            this.$modal.hide("Student");
+            this.$modal.hide("instructor");
         }).catch(()=>{
-            this.studentErr=true;
+            this.instructorErr=true;
             this.disabled = false;
         })
 
     },
-     updateStudent(){
+     updateinstructor(){
         this.updatedisabled = true;
-        this.studentErr=false;
+        this.instructorErr=false;
         axios.request({
             url:"http://127.0.0.1:5000/api/users",
             method:"PATCH",
@@ -290,22 +303,22 @@ export default {
             }
         }).then((response)=>{
             this.updatedisabled = false;
-            let objIndex = this.students.findIndex((obj => obj.id == response.data.id));
-            this.students.splice(objIndex,1,response.data);
+            let objIndex = this.instructors.findIndex((obj => obj.id == response.data.id));
+            this.instructors.splice(objIndex,1,response.data);
             this.selected[0]=response.data;
             this.name="";
             this.username="";
             this.email="";
             this.password="";
             this.birthdate="";
-            this.$modal.hide("Student");
+            this.$modal.hide("instructor");
         }).catch(()=>{
-            this.studentErr=true;
+            this.instructorErr=true;
             this.updatedisabled = false;
         })
 
     },
-    deleteStudents(){
+    deleteinstructors(){
         this.deletedisable = true;
         this.delErr=false;
         for(let i=0; i<this.selected.length ; i++){
@@ -321,15 +334,15 @@ export default {
             }
         }).then(()=>{
             let id = this.selected[i].id;
-            this.students = this.students.filter(function(student){
-                return student.id != id;
+            this.instructors = this.instructors.filter(function(instructor){
+                return instructor.id != id;
             })
         }).catch(()=>{
             this.deleteErr=true;
         })
         }
         this.deletedisable = false;
-        this.$modal.hide("deleteStudents")
+        this.$modal.hide("deleteinstructors")
 
     },
   },
@@ -337,7 +350,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#students{
+#instructors{
     display: grid;
     justify-items: center;
     
@@ -350,7 +363,7 @@ export default {
     height: 100%;
 
 }
-.student-form{
+.instructor-form{
     padding: 5%;
     display: grid;
 }

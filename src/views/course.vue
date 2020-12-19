@@ -96,6 +96,7 @@
         </v-tab-item>
         <v-tab-item>
           <v-card flat>
+              <courseInstructors :courseId= course.id />
             
           </v-card>
         </v-tab-item>
@@ -121,13 +122,15 @@
 </template>
 
 <script>
-import courseStudents from "../components/courseStudents"
+import courseStudents from "../components/courseStudents";
+import courseInstructors from "../components/courseInstructors";
 import axios from "axios";
 import cookies from "vue-cookies";
 export default {
   name: "course-view",
   components: {
       courseStudents,
+      courseInstructors
   },
 
   computed: {
@@ -179,8 +182,7 @@ export default {
           .then((response) => {
             this.disabled = false;
             this.$modal.hide("updateCourse");
-            this.course = response.data;
-            this.$store.commint("setCourse",response.data);
+            this.$store.commit("setCourse",response.data);
           })
           .catch(() => {
             this.disabled = false;

@@ -156,14 +156,22 @@
 <script>
 import axios from "axios";
 import cookies from "vue-cookies";
+const wait = ms => new Promise(res => setTimeout(res, ms));
 export default {
   name: "instructors-view",
-  mounted() {
-    this.getinstructors();
+  async mounted () {
+      if (this.instructors == undefined || this.instructors.length ==0 ){
+          this.$store.dispatch("getInstructors");
+          await wait(200)
+      }
+  },
+  computed: {
+        instructors() {
+          return this.$store.state.instructors; 
+      }
   },
   data() {
     return {
-      instructors: [],
       selected:[],
       singleSelect:false,
       err: false,
@@ -197,24 +205,6 @@ export default {
   },
 
   methods: {      
-    getinstructors() {
-      axios
-        .request({
-          url: "http://127.0.0.1:5000/api/instructors",
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            loginToken: cookies.get("token"),
-          },
-        })
-        .then((response) => {
-          this.instructors = response.data;
-          this.err = false;
-        })
-        .catch(() => {
-          this.err = true;
-        });
-    },
     newSteudent(){
         this.name="";
         this.username="";

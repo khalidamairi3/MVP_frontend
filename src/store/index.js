@@ -66,7 +66,24 @@ export default new Vuex.Store({
         .catch(() => {
 
         });
-    }
+    },
+    getInstructors() {
+      axios
+        .request({
+          url: "http://127.0.0.1:5000/api/instructors",
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            loginToken: cookies.get("token"),
+          },
+        })
+        .then((response) => {
+          this.commit("updateInstructors",response.data);
+        })
+        .catch(() => {
+          alert("somthing went wrong");
+        });
+    },
 
 
   },

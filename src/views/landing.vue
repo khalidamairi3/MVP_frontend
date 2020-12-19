@@ -78,6 +78,7 @@ export default {
               this.disabled=false;
               if(response.data.role=="admin"){
                 this.$store.dispatch("getStudents");
+                this.$store.dispatch("getInstructors");
                 this.$router.push("/admin");
               }
               else if(response.data.role=="instructor"){

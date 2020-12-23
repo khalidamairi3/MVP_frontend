@@ -156,18 +156,30 @@
 <script>
 import axios from "axios";
 import cookies from "vue-cookies";
-const wait = ms => new Promise(res => setTimeout(res, ms));
+// const wait = ms => new Promise(res => setTimeout(res, ms));
 export default {
   name: "instructors-view",
   async mounted () {
-      if (this.instructors == undefined || this.instructors.length ==0 ){
-          this.$store.dispatch("getInstructors");
-          await wait(200)
+     if(cookies.get("token") == undefined){
+           this.$router.push("/");
+           return;
+       }
+      if (this.user.id == undefined){
+          this.$store.dispatch("start");
+          this.$router.push("/courses");
+          
       }
+    //   if (this.instructors == undefined || this.instructors.length ==0 ){
+    //       this.$store.dispatch("getInstructors");
+    //       await wait(200)
+    //   }
   },
   computed: {
         instructors() {
           return this.$store.state.instructors; 
+      },
+      user(){
+          return this.$store.state.user
       }
   },
   data() {
@@ -244,7 +256,7 @@ export default {
         this.disabled = true;
         this.instructorErr=false;
         axios.request({
-            url:"http://127.0.0.1:5000/api/users",
+            url:"https://khaledclasses.ml/api/users",
             method:"POST",
             data:{
                loginToken : cookies.get("token"),
@@ -277,7 +289,7 @@ export default {
         this.updatedisabled = true;
         this.instructorErr=false;
         axios.request({
-            url:"http://127.0.0.1:5000/api/users",
+            url:"https://khaledclasses.ml/api/users",
             method:"PATCH",
             data:{
                 userId:this.selected[0].id,
@@ -313,7 +325,7 @@ export default {
         this.delErr=false;
         for(let i=0; i<this.selected.length ; i++){
         axios.request({
-            url:"http://127.0.0.1:5000/api/users",
+            url:"https://khaledclasses.ml/api/users",
             method:"DELETE",
             data:{
                 userId:this.selected[i].id,

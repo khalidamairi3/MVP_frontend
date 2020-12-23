@@ -153,14 +153,23 @@
 <script>
 import axios from "axios";
 import cookies from "vue-cookies";
-const wait = ms => new Promise(res => setTimeout(res, ms));
+// const wait = ms => new Promise(res => setTimeout(res, ms));
 export default {
   name: "students-view",
   async mounted () {
-      if (this.students == undefined || this.students.length ==0 ){
-          this.$store.dispatch("getStudents");
-          await wait(200)
+      if(cookies.get("token") == undefined){
+           this.$router.push("/");
+           return;
+       }
+      if (this.user.id == undefined){
+          this.$store.dispatch("start");
+          this.$router.push("/courses");
+          
       }
+    //   if (this.students == undefined || this.students.length ==0 ){
+    //       this.$store.dispatch("getStudents");
+    //       await wait(200)
+    //   }
   },
   data() {
     return {
@@ -241,7 +250,7 @@ export default {
         this.disabled = true;
         this.studentErr=false;
         axios.request({
-            url:"http://127.0.0.1:5000/api/users",
+            url:"https://khaledclasses.ml/api/users",
             method:"POST",
             data:{
                loginToken : cookies.get("token"),
@@ -274,7 +283,7 @@ export default {
         this.updatedisabled = true;
         this.studentErr=false;
         axios.request({
-            url:"http://127.0.0.1:5000/api/users",
+            url:"https://khaledclasses.ml/api/users",
             method:"PATCH",
             data:{
                 userId:this.selected[0].id,
@@ -310,7 +319,7 @@ export default {
         this.delErr=false;
         for(let i=0; i<this.selected.length ; i++){
         axios.request({
-            url:"http://127.0.0.1:5000/api/users",
+            url:"https://khaledclasses.ml/api/users",
             method:"DELETE",
             data:{
                 userId:this.selected[i].id,

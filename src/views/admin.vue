@@ -62,8 +62,19 @@
 </template>
 
 <script>
+import cookies from "vue-cookies";
     export default {
         name: "admin-view",
+        mounted () {
+            if(cookies.get("token") == undefined){
+           this.$router.push("/");
+           return;
+       }
+      if (this.user.id == undefined){
+          this.$store.dispatch("start");
+          
+      };
+        },
         methods: {
             viewCourses() {
 
@@ -79,6 +90,11 @@
 
                 this.$router.push("/students");
                 
+            }
+        },
+        computed: {
+            user() {
+                return this.$store.state.user; 
             }
         },
         

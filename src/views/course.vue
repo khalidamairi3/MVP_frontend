@@ -70,7 +70,7 @@
             <v-tab v-if=" user.role =='admin' || user.role =='instructor'">
               Students
             </v-tab>
-            <v-tab v-if="user.role='admin'">
+            <v-tab v-if="user.role=='admin'">
               Instructors
             </v-tab>
             <v-tab v-if=" user.role =='student' || user.role =='instructor'"> 
@@ -87,31 +87,34 @@
           </v-tabs>
 
           <v-tabs-items v-model="tab">
-        <v-tab-item>
+        <v-tab-item v-if=" user.role =='admin' || user.role =='instructor'">
           <v-card flat>
 
               <courseStudents :courseId = course.id />
             
           </v-card>
         </v-tab-item>
-        <v-tab-item>
+        <v-tab-item v-if=" user.role =='admin'">
           <v-card flat>
               <courseInstructors :courseId= course.id />
             
           </v-card>
         </v-tab-item>
-        <v-tab-item>
+        <v-tab-item v-if=" user.role =='student' || user.role =='instructor'">
           <v-card flat>
-            
+                <courseAssignments :assignments="assignments" />
           </v-card>
         </v-tab-item>
-        <v-tab-item>
+        <v-tab-item v-if=" user.role =='student' || user.role =='instructor'">
           <v-card flat>
+              <courseQuizes :quizez = quizez />
             
           </v-card>
-        </v-tab-item>
-        <v-tab-item>
+        </v-tab-item >
+        <v-tab-item v-if=" user.role =='student' || user.role =='instructor'">
           <v-card flat>
+
+             <courseExams :exams = exams />
             
           </v-card>
         </v-tab-item>
@@ -124,13 +127,34 @@
 <script>
 import courseStudents from "../components/courseStudents";
 import courseInstructors from "../components/courseInstructors";
+import courseAssignments from "../components/courseAssignments";
+import courseQuizes from "../components/courseQuizez";
+import courseExams from "../components/courseExams";
 import axios from "axios";
 import cookies from "vue-cookies";
 export default {
   name: "course-view",
   components: {
       courseStudents,
-      courseInstructors
+      courseInstructors,
+      courseAssignments,
+      courseQuizes,
+      courseExams
+  },
+
+  mounted () {
+      if(cookies.get("token") == undefined){
+           this.$router.push("/");
+           return;
+       }
+      if (this.user.id == undefined){
+          this.$store.dispatch("start");
+          this.$router.push("/courses");
+          
+      }
+      if (this.course.id != undefined){
+          this.getTasks();
+      };
   },
 
   computed: {
@@ -150,7 +174,11 @@ export default {
             courseErr: false,
             disabled:false,
             deletedisabled:false,
-            tab:null
+            tab:null,
+            assignments : [],
+            quizez : [],
+            exams : [],
+            tasks:[]
             
         }
     },
@@ -166,7 +194,7 @@ export default {
         this.disabled = true;
         this.courseErr = false;
         axios.request({
-            url: "http://127.0.0.1:5000/api/courses",
+            url: "https://khaledclasses.ml/api/courses",
             method: "PATCH",
             data: {
               loginToken: cookies.get("token"),
@@ -194,7 +222,7 @@ export default {
     deleteCourse() {
         this.deletedisabled = true;
         axios.request({
-            url: "http://127.0.0.1:5000/api/courses",
+            url: "https://khaledclasses.ml/api/courses",
             method: "DELETE",
             data: {
               loginToken: cookies.get("token"),
@@ -214,6 +242,33 @@ export default {
           .catch(() => {
             this.disabled = false;
           });
+      },
+      getTasks(){
+          axios.request({
+              url:"https://khaledclasses.ml/api/tasks",
+              method:"GET",
+              params:{
+                  courseId:this.course.id,    
+              },
+              headers: {
+              "Content-Type": "application/json",
+              "loginToken": cookies.get("token")
+            },
+
+              
+          }).then((response)=>{
+              this.tasks=response.data;
+              this.assignments=this.tasks.filter(function(task){
+                  return task.type == "assignment";
+              });
+              this.quizez=this.tasks.filter(function(task){
+                  return task.type == "quiz";
+              });
+              this.exams=this.tasks.filter(function(task){
+                  return task.type == "exam";
+              });
+
+          }).catch(()=>{})
       }
   },
 };

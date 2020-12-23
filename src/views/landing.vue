@@ -48,6 +48,11 @@ import axios from "axios";
 import cookies from "vue-cookies";
 export default {
   name: "landing-page",
+  mounted () {
+    if(cookies.get("token")!=undefined){
+      this.$router.push("/courses");
+    };
+  },
   data() {
       return {
           email: "",
@@ -61,7 +66,7 @@ export default {
           this.disabled=true;
           this.err = false;
           axios.request({
-              url:"http://127.0.0.1:5000/api/login",
+              url:"https://khaledclasses.ml/api/login",
               method : "POST",
               data:{
                   email:this.email,
@@ -82,11 +87,11 @@ export default {
                 this.$router.push("/admin");
               }
               else if(response.data.role=="instructor"){
-                this.$store.dispatch("getStudents");
-                this.$router.push("/instructor");
+  
+                this.$router.push("/courses");
               }
               else{
-                 this.$router.push("/student");
+                 this.$router.push("/courses");
               }
               
           }).catch(()=>{

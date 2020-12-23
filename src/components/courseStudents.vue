@@ -12,7 +12,7 @@
       show-select
       class="elevation-1 data-table"
     >
-      <template v-slot:top>
+      <template v-if="user.role=='admin'" v-slot:top>
         <v-switch
           v-model="singleSelect"
           label="Single select"
@@ -21,8 +21,8 @@
       </template>
     </v-data-table>
 
-    <v-btn color="primary" @click="dataModal" > add student  </v-btn>
-    <v-btn color="error" @click="deleteModal" > delete students  </v-btn>
+    <v-btn color="primary" v-if="user.role == 'admin'" @click="dataModal" > add student  </v-btn>
+    <v-btn color="error" v-if="user.role == 'admin'" @click="deleteModal" > delete students  </v-btn>
 
     
 
@@ -98,8 +98,13 @@ export default {
   },
   computed: {
       allstudents() {
-          return this.$store.state.students 
-      }
+          return this.$store.state.students ;
+      },
+     
+          user() {
+              return this.$store.state.user ;
+          }
+      ,
   },
   data() {
     return {
@@ -152,7 +157,7 @@ export default {
        getStudents() {
       axios
         .request({
-          url: "http://127.0.0.1:5000/api/students",
+          url: "https://khaledclasses.ml/api/students",
           method: "GET",
           params:{
               courseId:this.courseId
@@ -179,7 +184,7 @@ export default {
 
             for(let i=0; i<this.selected2.length ; i++){
         axios.request({
-            url:"http://127.0.0.1:5000/api/student-register",
+            url:"https://khaledclasses.ml/api/student-register",
             method:"POST",
             data:{
                 studentId:this.selected2[i].id,
@@ -218,7 +223,7 @@ export default {
 
             for(let i=0; i<this.selected.length ; i++){
         axios.request({
-            url:"http://127.0.0.1:5000/api/student-register",
+            url:"https://khaledclasses.ml/api/student-register",
             method:"DELETE",
             data:{
                 studentId:this.selected[i].id,

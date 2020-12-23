@@ -51,9 +51,11 @@ import axios from "axios";
         },
         methods: {
             logout() {
-
+                if(cookies.get("token") == undefined){
+                    return;
+                }
                 axios.request({
-                    url:"http://127.0.0.1:5000/api/login",
+                    url:"https://khaledclasses.ml/api/login",
                     method : "DELETE",
                     data : {
                         loginToken : cookies.get("token")
@@ -64,6 +66,7 @@ import axios from "axios";
 
                 }).then(()=>{
                     cookies.remove("token");
+                    this.$store.commit("reset");
                     this.$router.push("/");
                 }).catch(()=>{
                     this.err = true;

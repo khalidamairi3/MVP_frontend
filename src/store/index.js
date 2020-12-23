@@ -11,7 +11,9 @@ export default new Vuex.Store({
     instructors:[],
     students : [],
     courses :[],
-    selectedCourse:{}
+    selectedCourse:{},
+    selectedtask:{},
+    selectedsubmission:{}
   },
   mutations: {
     setUser: function (state, user) {
@@ -19,6 +21,12 @@ export default new Vuex.Store({
     },
     setCourse: function (state, course) {
       state.selectedCourse = course;
+    },
+    setTask: function (state, task) {
+      state.selectedtask = task;
+    },
+    setSubmission: function (state, submission) {
+      state.selectedsubmission = submission;
     },
     updateInstructors: function (state, data) {
       state.instructors = data;
@@ -29,13 +37,50 @@ export default new Vuex.Store({
     updateCourses: function (state, data) {
       state.courses = data;
     },
+    reset: function (state) {
+      state.courses = [];
+      state.students=[];
+      state.instructors=[];
+      state.selectedsubmission = {};
+      state.selectedtask ={};
+      state.selectedCourse = {};
+      state.user={}
+
+
+    },
+   
     
   },
   actions: {
+
+    start(){ 
+      axios.request({
+        url: "https://khaledclasses.ml/api/users",
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          loginToken: cookies.get("token"),
+        },
+      })
+      .then((response) => {
+        this.commit("setUser",response.data);
+        this.dispatch("getCourses");
+        if(response.data.role=="admin"){
+          this.$store.dispatch("getStudents");
+          this.$store.dispatch("getInstructors");
+        }
+      })
+      .catch(() => {
+        alert("Something went wrong")
+      });
+
+
+    },
+
     getCourses() {
       axios
         .request({
-          url: "http://127.0.0.1:5000/api/courses",
+          url: "https://khaledclasses.ml/api/courses",
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -53,7 +98,7 @@ export default new Vuex.Store({
     getStudents() {
       axios
         .request({
-          url: "http://127.0.0.1:5000/api/students",
+          url: "https://khaledclasses.ml/api/students",
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +115,7 @@ export default new Vuex.Store({
     getInstructors() {
       axios
         .request({
-          url: "http://127.0.0.1:5000/api/instructors",
+          url: "https://khaledclasses.ml/api/instructors",
           method: "GET",
           headers: {
             "Content-Type": "application/json",

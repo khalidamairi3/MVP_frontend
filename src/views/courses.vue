@@ -3,7 +3,7 @@
     <v-alert class="alert" v-if="err" dense type="error">
       Something went wrong
     </v-alert>
-    <v-btn @click="newCourse" id="new"> Create a new course </v-btn>
+    <v-btn v-if="user.role == 'admin' " @click="newCourse" id="new"> Create a new course </v-btn>
     <courseCard v-for="course in courses" :key="course.id" :course="course" />
     <modal name="newCourse">
       <v-form class="course-form" ref="form" lazy-validation>
@@ -49,16 +49,21 @@
 import axios from "axios";
 import cookies from "vue-cookies";
 import courseCard from "../components/course";
-const wait = ms => new Promise(res => setTimeout(res, ms));
+// const wait = ms => new Promise(res => setTimeout(res, ms));
 export default {
   name: "courses-view",
   components: {
     courseCard,
   },
-   async mounted () {
-      if (this.courses == undefined || this.courses.length ==0 ){
-          this.$store.dispatch("getCourses");
-          await wait(200)
+    mounted () {
+
+       if(cookies.get("token") == undefined){
+           this.$router.push("/");
+           return;
+       }
+      if (this.user.id == undefined){
+          this.$store.dispatch("start");
+          
       }
   },
   data() {
@@ -74,6 +79,9 @@ export default {
   computed: {
       courses() {
           return this.$store.state.courses; 
+      },
+      user(){
+          return this.$store.state.user
       }
   },
   methods: {
@@ -88,7 +96,7 @@ export default {
         this.courseErr = false;
         axios
           .request({
-            url: "http://127.0.0.1:5000/api/courses",
+            url: "https://khaledclasses.ml/api/courses",
             method: "POST",
             data: {
               loginToken: cookies.get("token"),

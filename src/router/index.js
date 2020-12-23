@@ -7,6 +7,8 @@ import coursesPage from "../views/courses.vue"
 import coursePage from "../views/course.vue"
 import studentsPage from "../views/students.vue"
 import instructorsPage from "../views/instructors.vue"
+import taskPage from "../views/task.vue";
+import submissionPage from "../views/submission.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -14,6 +16,16 @@ const routes = [
     path: "/",
     name: "landing",
     component: landingPage
+  },
+  {
+    path: "/submission",
+    name: "submission",
+    component: submissionPage
+  },
+  {
+    path: "/task",
+    name: "task",
+    component: taskPage
   },
   {
     path: "/students",

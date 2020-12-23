@@ -152,7 +152,7 @@ export default {
        getinstructors() {
       axios
         .request({
-          url: "http://127.0.0.1:5000/api/instructors",
+          url: "https://khaledclasses.ml/api/instructors",
           method: "GET",
           params:{
               courseId:this.courseId
@@ -179,7 +179,7 @@ export default {
 
             for(let i=0; i<this.selected2.length ; i++){
         axios.request({
-            url:"http://127.0.0.1:5000/api/instructor-teach",
+            url:"https://khaledclasses.ml/api/instructor-teach",
             method:"POST",
             data:{
                 instructorId:this.selected2[i].id,
@@ -218,7 +218,7 @@ export default {
 
             for(let i=0; i<this.selected.length ; i++){
         axios.request({
-            url:"http://127.0.0.1:5000/api/instructor-teach",
+            url:"https://khaledclasses.ml/api/instructor-teach",
             method:"DELETE",
             data:{
                 instructorId:this.selected[i].id,

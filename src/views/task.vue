@@ -146,26 +146,23 @@
     </v-simple-table>
 
     <modal height="50%" name="submission-modal">
-        <div style=" width : 80%; margin:10%">
+      <div style="width: 80%; margin: 10%">
+        <v-text-field
+          v-model="content"
+          label="Submission"
+          required
+        ></v-text-field>
 
-      
-      <v-text-field
-        v-model="content"
-        label="Submission"
-        required
-      ></v-text-field>
+        <v-text-field v-model="comment" label="Comment" required></v-text-field>
 
-      <v-text-field
-        v-model="comment"
-        label="Comment"
-        required
-      ></v-text-field>
-
-      <v-btn :disabled=submitDisabled color="primary" @click="postSubmition">
-        Submit
-      </v-btn>
-
-        </div>
+        <v-btn
+          :disabled="submitDisabled"
+          color="primary"
+          @click="postSubmition"
+        >
+          Submit
+        </v-btn>
+      </div>
     </modal>
   </div>
 </template>
@@ -178,15 +175,14 @@ export default {
   components: {},
 
   mounted() {
-      if(cookies.get("token") == undefined){
-           this.$router.push("/");
-           return;
-       }
-      if (this.user.id == undefined){
-          this.$store.dispatch("start");
-          this.$router.push("/courses");
-          
-      }
+    if (cookies.get("token") == undefined) {
+      this.$router.push("/");
+      return;
+    }
+    if (this.user.id == undefined) {
+      this.$store.dispatch("start");
+      this.$router.push("/courses");
+    }
     if (this.task.id != undefined && this.user.role != "admin") {
       this.getSubmissions();
     }

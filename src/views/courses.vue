@@ -3,7 +3,9 @@
     <v-alert class="alert" v-if="err" dense type="error">
       Something went wrong
     </v-alert>
-    <v-btn v-if="user.role == 'admin' " @click="newCourse" id="new"> Create a new course </v-btn>
+    <v-btn v-if="user.role == 'admin'" @click="newCourse" id="new">
+      Create a new course
+    </v-btn>
     <courseCard v-for="course in courses" :key="course.id" :course="course" />
     <modal name="newCourse">
       <v-form class="course-form" ref="form" lazy-validation>
@@ -55,16 +57,14 @@ export default {
   components: {
     courseCard,
   },
-    mounted () {
-
-       if(cookies.get("token") == undefined){
-           this.$router.push("/");
-           return;
-       }
-      if (this.user.id == undefined){
-          this.$store.dispatch("start");
-          
-      }
+  mounted() {
+    if (cookies.get("token") == undefined) {
+      this.$router.push("/");
+      return;
+    }
+    if (this.user.id == undefined) {
+      this.$store.dispatch("start");
+    }
   },
   data() {
     return {
@@ -77,15 +77,14 @@ export default {
     };
   },
   computed: {
-      courses() {
-          return this.$store.state.courses; 
-      },
-      user(){
-          return this.$store.state.user
-      }
+    courses() {
+      return this.$store.state.courses;
+    },
+    user() {
+      return this.$store.state.user;
+    },
   },
   methods: {
-   
     newCourse() {
       this.$modal.show("newCourse");
     },

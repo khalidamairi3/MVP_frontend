@@ -1,15 +1,15 @@
 <template>
   <div id="course-view">
-      <v-btn v-if="user.role=='admin'" color="primary" @click="updateModal">
-          update
-      </v-btn>
-      <v-btn v-if="user.role=='admin'" color="error" @click="deleteModal">
-          Delete
-      </v-btn>
+    <v-btn v-if="user.role == 'admin'" color="primary" @click="updateModal">
+      update
+    </v-btn>
+    <v-btn v-if="user.role == 'admin'" color="error" @click="deleteModal">
+      Delete
+    </v-btn>
     <div id="courseDetails">
-    <h1 id="title">{{ course.name }}</h1>
-    <h3>{{ "Department : " + course.department }}</h3>
-    <h3>{{ "Credits: " + course.credits }}</h3>
+      <h1 id="title">{{ course.name }}</h1>
+      <h3>{{ "Department : " + course.department }}</h3>
+      <h3>{{ "Credits: " + course.credits }}</h3>
     </div>
     <modal name="updateCourse">
       <v-form class="course-form" ref="form" lazy-validation>
@@ -48,79 +48,65 @@
         </v-alert>
       </v-form>
     </modal>
-    <modal  name="deleteModal">
-
-        <div id="delModal">
-
-            <p> Are you sure you want to delete the course</p>
-        <v-btn v-if="user.role=='admin'" :disabled="deletedisabled" color="error" @click="deleteCourse">
+    <modal name="deleteModal">
+      <div id="delModal">
+        <p>Are you sure you want to delete the course</p>
+        <v-btn
+          v-if="user.role == 'admin'"
+          :disabled="deletedisabled"
+          color="error"
+          @click="deleteCourse"
+        >
           Delete
-      </v-btn>
-
-        </div>     
-         
+        </v-btn>
+      </div>
     </modal>
 
-    <v-tabs
-            v-model="tab"
-            
-          >
-            <v-tabs-slider color="primary"></v-tabs-slider>
-  
-            <v-tab v-if=" user.role =='admin' || user.role =='instructor'">
-              Students
-            </v-tab>
-            <v-tab v-if="user.role=='admin'">
-              Instructors
-            </v-tab>
-            <v-tab v-if=" user.role =='student' || user.role =='instructor'"> 
-                Assignments
-            </v-tab>
-            <v-tab v-if=" user.role =='student' || user.role =='instructor'"> 
-                Quizez
-            </v-tab>
-            <v-tab v-if=" user.role =='student' || user.role =='instructor'"> 
-                Exams
-            </v-tab>
+    <v-tabs v-model="tab">
+      <v-tabs-slider color="primary"></v-tabs-slider>
 
+      <v-tab v-if="user.role == 'admin' || user.role == 'instructor'">
+        Students
+      </v-tab>
+      <v-tab v-if="user.role == 'admin'"> Instructors </v-tab>
+      <v-tab v-if="user.role == 'student' || user.role == 'instructor'">
+        Assignments
+      </v-tab>
+      <v-tab v-if="user.role == 'student' || user.role == 'instructor'">
+        Quizez
+      </v-tab>
+      <v-tab v-if="user.role == 'student' || user.role == 'instructor'">
+        Exams
+      </v-tab>
+    </v-tabs>
 
-          </v-tabs>
-
-          <v-tabs-items v-model="tab">
-        <v-tab-item v-if=" user.role =='admin' || user.role =='instructor'">
-          <v-card flat>
-
-              <courseStudents :courseId = course.id />
-            
-          </v-card>
-        </v-tab-item>
-        <v-tab-item v-if=" user.role =='admin'">
-          <v-card flat>
-              <courseInstructors :courseId= course.id />
-            
-          </v-card>
-        </v-tab-item>
-        <v-tab-item v-if=" user.role =='student' || user.role =='instructor'">
-          <v-card flat>
-                <courseAssignments :assignments="assignments" />
-          </v-card>
-        </v-tab-item>
-        <v-tab-item v-if=" user.role =='student' || user.role =='instructor'">
-          <v-card flat>
-              <courseQuizes :quizez = quizez />
-            
-          </v-card>
-        </v-tab-item >
-        <v-tab-item v-if=" user.role =='student' || user.role =='instructor'">
-          <v-card flat>
-
-             <courseExams :exams = exams />
-            
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
-        
-
+    <v-tabs-items v-model="tab">
+      <v-tab-item v-if="user.role == 'admin' || user.role == 'instructor'">
+        <v-card flat>
+          <courseStudents :courseId="course.id" />
+        </v-card>
+      </v-tab-item>
+      <v-tab-item v-if="user.role == 'admin'">
+        <v-card flat>
+          <courseInstructors :courseId="course.id" />
+        </v-card>
+      </v-tab-item>
+      <v-tab-item v-if="user.role == 'student' || user.role == 'instructor'">
+        <v-card flat>
+          <courseAssignments :assignments="assignments" />
+        </v-card>
+      </v-tab-item>
+      <v-tab-item v-if="user.role == 'student' || user.role == 'instructor'">
+        <v-card flat>
+          <courseQuizes :quizez="quizez" />
+        </v-card>
+      </v-tab-item>
+      <v-tab-item v-if="user.role == 'student' || user.role == 'instructor'">
+        <v-card flat>
+          <courseExams :exams="exams" />
+        </v-card>
+      </v-tab-item>
+    </v-tabs-items>
   </div>
 </template>
 
@@ -135,26 +121,25 @@ import cookies from "vue-cookies";
 export default {
   name: "course-view",
   components: {
-      courseStudents,
-      courseInstructors,
-      courseAssignments,
-      courseQuizes,
-      courseExams
+    courseStudents,
+    courseInstructors,
+    courseAssignments,
+    courseQuizes,
+    courseExams,
   },
 
-  mounted () {
-      if(cookies.get("token") == undefined){
-           this.$router.push("/");
-           return;
-       }
-      if (this.user.id == undefined){
-          this.$store.dispatch("start");
-          this.$router.push("/courses");
-          
-      }
-      if (this.course.id != undefined){
-          this.getTasks();
-      };
+  mounted() {
+    if (cookies.get("token") == undefined) {
+      this.$router.push("/");
+      return;
+    }
+    if (this.user.id == undefined) {
+      this.$store.dispatch("start");
+      this.$router.push("/courses");
+    }
+    if (this.course.id != undefined) {
+      this.getTasks();
+    }
   },
 
   computed: {
@@ -164,24 +149,22 @@ export default {
     user() {
       return this.$store.state.user;
     },
-    
   },
   data() {
-        return {
-            name: "",
-            department:"",
-            credits:"",
-            courseErr: false,
-            disabled:false,
-            deletedisabled:false,
-            tab:null,
-            assignments : [],
-            quizez : [],
-            exams : [],
-            tasks:[]
-            
-        }
-    },
+    return {
+      name: "",
+      department: "",
+      credits: "",
+      courseErr: false,
+      disabled: false,
+      deletedisabled: false,
+      tab: null,
+      assignments: [],
+      quizez: [],
+      exams: [],
+      tasks: [],
+    };
+  },
   methods: {
     updateModal() {
       this.$modal.show("updateCourse");
@@ -193,12 +176,13 @@ export default {
       if (this.credits != 0 || this.name != "" || this.deppartment != "") {
         this.disabled = true;
         this.courseErr = false;
-        axios.request({
+        axios
+          .request({
             url: "https://khaledclasses.ml/api/courses",
             method: "PATCH",
             data: {
               loginToken: cookies.get("token"),
-              courseId:this.course.id,
+              courseId: this.course.id,
               courseName: this.name,
               credits: this.credits,
               department: this.department,
@@ -210,66 +194,65 @@ export default {
           .then((response) => {
             this.disabled = false;
             this.$modal.hide("updateCourse");
-            this.$store.commit("setCourse",response.data);
+            this.$store.commit("setCourse", response.data);
           })
           .catch(() => {
             this.disabled = false;
             this.courseErr = true;
           });
       }
-
     },
     deleteCourse() {
-        this.deletedisabled = true;
-        axios.request({
-            url: "https://khaledclasses.ml/api/courses",
-            method: "DELETE",
-            data: {
-              loginToken: cookies.get("token"),
-              courseId:this.course.id,
-            },
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
-          .then(() => {
-            this.$modal.hide("deleteModal");
-            this.$store.dispatch("getCourses");
-            this.deletedisabled = false;
-            this.$router.push("/courses")
-            
-          })
-          .catch(() => {
-            this.disabled = false;
+      this.deletedisabled = true;
+      axios
+        .request({
+          url: "https://khaledclasses.ml/api/courses",
+          method: "DELETE",
+          data: {
+            loginToken: cookies.get("token"),
+            courseId: this.course.id,
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then(() => {
+          this.$modal.hide("deleteModal");
+          this.$store.dispatch("getCourses");
+          this.deletedisabled = false;
+          this.$router.push("/courses");
+        })
+        .catch(() => {
+          this.disabled = false;
+        });
+    },
+    getTasks() {
+      axios
+        .request({
+          url: "https://khaledclasses.ml/api/tasks",
+          method: "GET",
+          params: {
+            courseId: this.course.id,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            loginToken: cookies.get("token"),
+          },
+        })
+        .then((response) => {
+          this.tasks = response.data;
+          this.assignments = this.tasks.filter(function (task) {
+            return task.type == "assignment";
           });
-      },
-      getTasks(){
-          axios.request({
-              url:"https://khaledclasses.ml/api/tasks",
-              method:"GET",
-              params:{
-                  courseId:this.course.id,    
-              },
-              headers: {
-              "Content-Type": "application/json",
-              "loginToken": cookies.get("token")
-            },
-
-              
-          }).then((response)=>{
-              this.tasks=response.data;
-              this.assignments=this.tasks.filter(function(task){
-                  return task.type == "assignment";
-              });
-              this.quizez=this.tasks.filter(function(task){
-                  return task.type == "quiz";
-              });
-              this.exams=this.tasks.filter(function(task){
-                  return task.type == "exam";
-              });
-
-          }).catch(()=>{})
-      }
+          this.quizez = this.tasks.filter(function (task) {
+            return task.type == "quiz";
+          });
+          this.exams = this.tasks.filter(function (task) {
+            return task.type == "exam";
+          });
+        })
+        .catch(() => {});
+    },
   },
 };
 </script>
@@ -293,14 +276,14 @@ export default {
   padding: 5%;
   margin-left: 7.5%;
 }
-#delModal{
-    display: grid;
-    height: 100%;
-    align-items: center;
-    justify-items: center;
+#delModal {
+  display: grid;
+  height: 100%;
+  align-items: center;
+  justify-items: center;
 }
 
-#courseDetails{
-    margin-bottom: 10vh;
+#courseDetails {
+  margin-bottom: 10vh;
 }
 </style>

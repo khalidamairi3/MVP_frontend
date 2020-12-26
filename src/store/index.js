@@ -7,13 +7,13 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    user :{},
-    instructors:[],
-    students : [],
-    courses :[],
-    selectedCourse:{},
-    selectedtask:{},
-    selectedsubmission:{}
+    user: {},
+    instructors: [],
+    students: [],
+    courses: [],
+    selectedCourse: {},
+    selectedtask: {},
+    selectedsubmission: {}
   },
   mutations: {
     setUser: function (state, user) {
@@ -39,21 +39,21 @@ export default new Vuex.Store({
     },
     reset: function (state) {
       state.courses = [];
-      state.students=[];
-      state.instructors=[];
+      state.students = [];
+      state.instructors = [];
       state.selectedsubmission = {};
-      state.selectedtask ={};
+      state.selectedtask = {};
       state.selectedCourse = {};
-      state.user={}
+      state.user = {}
 
 
     },
-   
-    
+
+
   },
   actions: {
 
-    start(){ 
+    start() {
       axios.request({
         url: "https://khaledclasses.ml/api/users",
         method: "GET",
@@ -62,17 +62,17 @@ export default new Vuex.Store({
           loginToken: cookies.get("token"),
         },
       })
-      .then((response) => {
-        this.commit("setUser",response.data);
-        this.dispatch("getCourses");
-        if(response.data.role=="admin"){
-          this.$store.dispatch("getStudents");
-          this.$store.dispatch("getInstructors");
-        }
-      })
-      .catch(() => {
-        alert("Something went wrong")
-      });
+        .then((response) => {
+          this.commit("setUser", response.data);
+          this.dispatch("getCourses");
+          if (response.data.role == "admin") {
+            this.$store.dispatch("getStudents");
+            this.$store.dispatch("getInstructors");
+          }
+        })
+        .catch(() => {
+          alert("Something went wrong")
+        });
 
 
     },
@@ -88,7 +88,7 @@ export default new Vuex.Store({
           },
         })
         .then((response) => {
-          this.commit("updateCourses",response.data);
+          this.commit("updateCourses", response.data);
         })
         .catch(() => {
           alert("Something went wrong")
@@ -106,7 +106,7 @@ export default new Vuex.Store({
           },
         })
         .then((response) => {
-          this.commit("updateStudents",response.data);
+          this.commit("updateStudents", response.data);
         })
         .catch(() => {
 
@@ -123,7 +123,7 @@ export default new Vuex.Store({
           },
         })
         .then((response) => {
-          this.commit("updateInstructors",response.data);
+          this.commit("updateInstructors", response.data);
         })
         .catch(() => {
           alert("somthing went wrong");

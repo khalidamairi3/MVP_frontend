@@ -100,7 +100,7 @@
         >
       </div>
     </div>
-    <v-btn v-if="submissions.length == 0" color="primary" @click="Submission">
+    <v-btn v-if="submissions.length == 0 && user.role=='student'" color="primary" @click="Submission">
       Submit
     </v-btn>
     <v-simple-table
@@ -182,6 +182,11 @@ export default {
     if (this.user.id == undefined) {
       this.$store.dispatch("start");
       this.$router.push("/courses");
+      return;
+    }
+    if(this.user.role=='admin'){
+        this.$router.push("/admin");
+        return;
     }
     if (this.task.id != undefined && this.user.role != "admin") {
       this.getSubmissions();

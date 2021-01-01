@@ -1,5 +1,6 @@
 <template>
   <div id="courses-view">
+      <h1 class="page-header">Courses</h1>
     <v-alert class="alert" v-if="err" dense type="error">
       Something went wrong
     </v-alert>
@@ -131,6 +132,8 @@ export default {
   row-gap: 5vh;
   align-items: center;
   justify-items: center;
+  width: 80%;
+  margin-left: 10%;
 }
 #new {
   grid-column: 1/-1;

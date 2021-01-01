@@ -1,5 +1,6 @@
 <template>
   <div id="admin">
+      <h1 class="page-header"> Admin </h1>
     <v-card elevation="10" shaped>
       <v-card-title> Courses </v-card-title>
       <v-card-text> view all courses in the system </v-card-text>
@@ -70,5 +71,8 @@ export default {
   align-items: center;
   justify-items: center;
   row-gap: 5vh;
+  width: 80%;
+  margin-left: 10%;
+  justify-self: center;
 }
 </style>

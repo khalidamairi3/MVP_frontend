@@ -66,12 +66,13 @@ export default new Vuex.Store({
           this.commit("setUser", response.data);
           this.dispatch("getCourses");
           if (response.data.role == "admin") {
-            this.$store.dispatch("getStudents");
-            this.$store.dispatch("getInstructors");
+            this.dispatch("getStudents");
+            this.dispatch("getInstructors");
           }
         })
         .catch(() => {
           alert("Something went wrong")
+          console.log("start");
         });
 
 
@@ -92,6 +93,7 @@ export default new Vuex.Store({
         })
         .catch(() => {
           alert("Something went wrong")
+          console.log("courses");
         });
     },
 
@@ -109,6 +111,7 @@ export default new Vuex.Store({
           this.commit("updateStudents", response.data);
         })
         .catch(() => {
+          console.log("students");
 
         });
     },
@@ -127,6 +130,7 @@ export default new Vuex.Store({
         })
         .catch(() => {
           alert("somthing went wrong");
+          console.log("instructors");
         });
     },
 

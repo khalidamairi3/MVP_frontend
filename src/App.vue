@@ -1,7 +1,7 @@
 <template>
   <v-app>
     
-    <v-main>
+    <v-main >
 
       <navBar />
       <router-view/>
@@ -28,7 +28,15 @@ export default {
   })
 };
 </script>
-<style lang="scss" scoped>
+<style lang="scss" >
+
+
+.page-header{
+  grid-column:1/-1;
+  width: 100%;
+  padding: 5px;
+  border-bottom: 1px solid black;
+}
 
  
 

@@ -1,16 +1,19 @@
 <template>
   <div id="landing">
+    
     <v-form ref="form" lazy-validation class="login">
-      <v-text-field v-model="email" label="Email" required></v-text-field>
+      <img src="../images/logo.png" alt="khaledClasses logo">
+      <v-text-field style="width:75%" v-model="email" label="Email" required></v-text-field>
 
       <v-text-field
+        style="width:75%"
         type="password"
         v-model="password"
         label="Password"
         required
       ></v-text-field>
 
-      <v-btn :disabled="disabled" color="success" class="mr-4" @click="login">
+      <v-btn style="justify-self:start; margin-left: 12%" :disabled="disabled" color="success" class="mr-4" @click="login">
         Login
       </v-btn>
       <v-alert v-if="err" dense type="error"> Something went wrong </v-alert>
@@ -78,12 +81,17 @@ export default {
 
 <style lang="scss" scoped>
 .login {
-  width: 50%;
+  // width: 50%;
   justify-self: center;
   align-self: center;
+  display: grid;
+  justify-items: center;
+  align-items: center;
 }
 #landing {
   height: 100%;
   display: grid;
+  justify-items: center;
+  align-items: center;
 }
 </style>

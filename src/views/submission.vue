@@ -38,6 +38,11 @@ export default {
     if (this.user.id == undefined) {
       this.$store.dispatch("start");
       this.$router.push("/courses");
+      return;
+    }
+    if(this.user.role=='admin'){
+        this.$router.push("/admin");
+        return;
     }
   },
   computed: {

@@ -1,7 +1,10 @@
 <template>
   <div id="students">
-    <v-btn @click="newSteudent" outlined big> New Student </v-btn>
+
+      <h1 class="page-header"> Students </h1>
+    <v-btn @click="newSteudent" outlined big style="margin-top:5vh"> New Student </v-btn>
     <v-data-table
+        style="width : 95%"
       v-model="selected"
       :headers="headers"
       :items="students"
@@ -122,14 +125,19 @@ import cookies from "vue-cookies";
 // const wait = ms => new Promise(res => setTimeout(res, ms));
 export default {
   name: "students-view",
-  async mounted() {
+   mounted() {
     if (cookies.get("token") == undefined) {
       this.$router.push("/");
       return;
     }
     if (this.user.id == undefined) {
       this.$store.dispatch("start");
-      this.$router.push("/courses");
+      return;
+    }
+    if(this.user.role != 'admin'){
+        this.$router.push("/courses");
+        return;
+
     }
     //   if (this.students == undefined || this.students.length ==0 ){
     //       this.$store.dispatch("getStudents");
@@ -172,6 +180,9 @@ export default {
     students() {
       return this.$store.state.students;
     },
+    user(){
+        return this.$store.state.user;
+    }
   },
 
   methods: {
@@ -311,6 +322,8 @@ export default {
 #students {
   display: grid;
   justify-items: center;
+  width: 80%;
+  margin-left: 10%;
 }
 #deleteModal {
   display: grid;

@@ -1,10 +1,12 @@
 <template>
   <div id="instructors">
+      <h1 class="page-header"> Instructors </h1>
     <v-alert class="alert" v-if="err" dense type="error">
       Something went wrong
     </v-alert>
-    <v-btn @click="newSteudent" outlined big> New instructor </v-btn>
+    <v-btn @click="newSteudent" outlined big style="margin-top:5vh"> New instructor </v-btn>
     <v-data-table
+        style="width:95%"
       v-model="selected"
       :headers="headers"
       :items="instructors"
@@ -134,14 +136,15 @@ export default {
       this.$router.push("/");
       return;
     }
-    if (this.user.id == undefined) {
+    if (this.user.id == undefined ) {
       this.$store.dispatch("start");
-      this.$router.push("/courses");
+      return;
     }
-    //   if (this.instructors == undefined || this.instructors.length ==0 ){
-    //       this.$store.dispatch("getInstructors");
-    //       await wait(200)
-    //   }
+    if(this.user.role != 'admin'){
+        this.$router.push("/courses");
+        return;
+
+    }
   },
   computed: {
     instructors() {
@@ -322,6 +325,8 @@ export default {
 #instructors {
   display: grid;
   justify-items: center;
+  width: 80%;
+  margin-left:10%;
 }
 #deleteModal {
   display: grid;
